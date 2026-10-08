@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaStore — Smart E-Commerce & Seller Price Intelligence</title>
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+
+  <!-- ==================== MAIN HEADER ==================== -->
+  <header class="main-header">
+    <div class="header-inner">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="brand-logo" onclick="filterCategory('all'); return false;">
+        <div class="logo-gem">
+          <i class="fa-solid fa-gem"></i>
+        </div>
+        <div class="logo-titles">
+          <span class="logo-main">Nova<span class="logo-gradient">Store</span></span>
+          <span class="logo-sub">Smart Dynamic Commerce</span>
+        </div>
+      </a>
+
+      <!-- Navigation Categories -->
+      <nav class="nav-links">
+        <a href="#" class="nav-link active" onclick="filterCategory('all'); return false;">Catalog</a>
+        <a href="#" class="nav-link" onclick="filterCategory('Electronics'); return false;">Electronics</a>
+        <a href="#" class="nav-link" onclick="filterCategory('Clothing'); return false;">Fashion</a>
+        <a href="#" class="nav-link" onclick="filterCategory('Home & Kitchen'); return false;">Home & Living</a>
+        <a href="#" class="nav-link" onclick="filterCategory('Books'); return false;">Books</a>
+      </nav>
+
+      <!-- Live Search Bar -->
+      <div class="header-search">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="storeSearchInput" placeholder="Search catalog by product name or category..." autocomplete="off">
+        <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" style="display: none;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="header-actions">
+        <!-- Prominent "List My Product & Price Checker" Button -->
+        <button class="btn-list-product-header" onclick="openListingModal()">
+          <span class="glow-dot"></span>
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span>List My Product & Check Price</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button class="btn-cart" onclick="toggleCartDrawer()">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-pill" id="cartBadgeCount">0</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==================== HERO INTRODUCTION SECTION ==================== -->
+  <section class="hero-section">
+    <div class="hero-intro-wrapper">
+      <h1>Intelligent E-Commerce Where Sellers Price with Certainty.</h1>
+      <p class="hero-intro-text">
+        Welcome to <strong>NovaStore</strong>. Browse our curated store catalog or open the <strong>Seller Studio</strong> to upload product photos, select ratings, and validate whether customers will buy at your price using our <strong>99.2% accurate machine learning model</strong> before listing.
+      </p>
+      
+      <div class="hero-cta-group">
+        <button class="btn-hero-primary" onclick="openListingModal()">
+          <i class="fa-solid fa-cloud-arrow-up"></i> List My Product & Check Price
+        </button>
+        <button class="btn-hero-secondary" onclick="scrollToCatalog()">
+          Browse Store Catalog &darr;
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN STORE CATALOG ==================== -->
+  <main class="store-catalog-wrapper" id="storeCatalog">
+    
+    <!-- Catalog Header -->
+    <div class="catalog-header">
+      <div class="catalog-header-left">
+        <h2>Live Marketplace Catalog</h2>
+        <span class="results-counter" id="catalogResultsCount">Loading products...</span>
+      </div>
+
+      <div class="catalog-header-right">
+        <!-- Category Filter Pills -->
+        <div class="category-pills">
+          <button class="pill active" onclick="filterCategory('all')">All Products</button>
+          <button class="pill" onclick="filterCategory('Electronics')">Electronics</button>
+          <button class="pill" onclick="filterCategory('Clothing')">Fashion</button>
+          <button class="pill" onclick="filterCategory('Home & Kitchen')">Home & Living</button>
+          <button class="pill" onclick="filterCategory('Books')">Books</button>
+        </div>
+
+        <!-- Sort Box -->
+        <div class="sort-box">
+          <label for="catalogSortSelect">Sort by:</label>
+          <select id="catalogSortSelect" onchange="handleSortChange()">
+            <option value="featured">Featured</option>
+            <option value="price_low">Price: Low to High</option>
+            <option value="price_high">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+            <option value="reviews">Most Popular</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="catalog-grid" id="catalogGrid">
+      <!-- Injected via JavaScript -->
+    </div>
+
+  </main>
+
+  <!-- =========================================================================
+       THE "LIST MY PRODUCT" SECTION & ITEM PRICE CHECKER MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop" id="listingModal" style="display: none;">
+    <div class="listing-modal-dialog">
+      
+      <!-- Modal Header -->
+      <div class="listing-modal-header">
+        <div class="header-branding">
+          <div class="header-icon"><i class="fa-solid fa-store"></i></div>
+          <div>
+            <h3>List My Product & Customer Price Checker</h3>
+            <p>Upload your product image, set expected ratings, and check whether customers will buy at your price before listing.</p>
+          </div>
+        </div>
+        <button class="btn-modal-close" onclick="closeListingModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Modal Body (Two Balanced Columns) -->
+      <div class="listing-modal-body">
+        
+        <!-- LEFT COLUMN: Image Upload + Details + Rating -->
+        <div class="modal-col-left">
+          
+          <!-- STEP 1: Upload Image Section -->
+          <div class="section-box">
+            <div class="box-header">
+              <span class="step-num">1</span>
+              <h4>Upload Product Image</h4>
+            </div>
+
+            <!-- Drag & Drop Zone -->
+            <div class="upload-dropzone" id="uploadDropzone">
+              <input type="file" id="productImageFileInput" accept="image/*" style="display: none;" onchange="handleImageFileSelected(event)">
+              
+              <div class="dropzone-idle" id="dropzoneIdle">
+                <div class="upload-cloud-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <p class="dropzone-title"><strong>Click to upload</strong> or drag and drop image here</p>
+                <p class="dropzone-hint">PNG, JPG, WEBP up to 5MB</p>
+                <button type="button" class="btn-browse-file" onclick="triggerFileInput()">Browse Image File</button>
+                <div class="or-divider"><span>OR</span></div>
+                <button type="button" class="btn-sample-pick" onclick="cycleSampleImage()">Use Sample Preset Photo</button>
+              </div>
+
+              <!-- Live Image Preview Area (shown once uploaded) -->
+              <div class="dropzone-preview" id="dropzonePreview" style="display: none;">
+                <img id="imagePreviewImg" src="" alt="Preview">
+                <div class="preview-overlay">
+                  <span class="preview-filename" id="previewFileName">product_image.jpg</span>
+                  <div class="preview-btns">
+                    <button type="button" class="btn-change-img" onclick="triggerFileInput()"><i class="fa-solid fa-rotate"></i> Change</button>
+                    <button type="button" class="btn-remove-img" onclick="removeUploadedImage()"><i class="fa-solid fa-trash"></i> Remove</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2: Product Information & Rating -->
+          <div class="section-box" style="margin-top: 18px;">
+            <div class="box-header">
+              <span class="step-num">2</span>
+              <h4>Product Details & Rating</h4>
+            </div>
+
+            <div class="field-item">
+              <label for="listProductTitle">Product Title <span class="req">*</span></label>
+              <input type="text" id="listProductTitle" placeholder="e.g. Sony WH-1000XM5 Wireless Headphones" value="Aura Pro Wireless ANC Studio Headphones">
+            </div>
+
+            <div class="field-row-2">
+              <div class="field-item">
+                <label for="listProductCategory">Category</label>
+                <select id="listProductCategory" onchange="runModalBehaviorCheck()">
+                  <option value="Electronics" selected>Electronics & Audio</option>
+                  <option value="Clothing">Clothing & Fashion</option>
+                  <option value="Home & Kitchen">Home & Kitchen</option>
+                  <option value="Books">Books & Media</option>
+                </select>
+              </div>
+
+              <div class="field-item">
+                <label for="listCustomerAge">Target Customer Age</label>
+                <input type="number" id="listCustomerAge" value="32" min="18" max="70" oninput="runModalBehaviorCheck()">
+              </div>
+            </div>
+
+            <!-- Interactive Star Rating Picker (User explicitly asked: "the rating to tht product") -->
+            <div class="field-item rating-picker-box">
+              <label>Expected Product Rating (1.0 - 5.0 Stars):</label>
+              <div class="interactive-stars-row">
+                <div class="stars-stars" id="starPickerContainer">
+                  <span class="star active" data-val="1" onclick="setStarRating(1)">★</span>
+                  <span class="star active" data-val="2" onclick="setStarRating(2)">★</span>
+                  <span class="star active" data-val="3" onclick="setStarRating(3)">★</span>
+                  <span class="star active" data-val="4" onclick="setStarRating(4)">★</span>
+                  <span class="star active" data-val="5" onclick="setStarRating(5)">★</span>
+                </div>
+                <div class="rating-numeric-badge" id="ratingNumericBadge">4.8 / 5.0</div>
+                <select id="listRatingDropdown" onchange="syncDropdownToRating()" style="display: none;">
+                  <option value="5.0">5.0 ★★★★★</option>
+                  <option value="4.8" selected>4.8 ★★★★★</option>
+                  <option value="4.5">4.5 ★★★★☆</option>
+                  <option value="4.0">4.0 ★★★★☆</option>
+                  <option value="3.5">3.5 ★★★☆☆</option>
+                  <option value="3.0">3.0 ★★★☆☆</option>
+                </select>
+              </div>
+              <span class="rating-sub-hint">Customer buying decision heavily depends on your product's rating.</span>
+            </div>
+
+            <div class="field-item">
+              <label for="listSellerName">Seller / Brand Name</label>
+              <input type="text" id="listSellerName" value="Apex Studio Audio Labs">
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: Item Price Checker & Customer Behavior Analysis -->
+        <div class="modal-col-right">
+          
+          <div class="section-box price-checker-box">
+            <div class="box-header">
+              <span class="step-num">3</span>
+              <div class="header-title-wrap">
+                <h4>Item Price Checker</h4>
+                <span class="ml-model-badge"><i class="fa-solid fa-microchip"></i> Untitled1 GridSearchCV ML Model</span>
+              </div>
+            </div>
+
+            <p class="checker-intro">
+              Enter your tentative listing price and discount below to check if customers will purchase:
+            </p>
+
+            <!-- Price & Discount Inputs with Sliders -->
+            <div class="pricing-inputs-grid">
+              <div class="price-input-card">
+                <div class="pic-header">
+                  <label for="listPriceInput">Tentative Price ($)</label>
+                  <div class="price-val-tag">
+                    <span>$</span>
+                    <input type="number" id="listPriceInput" value="89.99" step="1" min="5" max="950" oninput="syncModalPriceFromInput()">
+                  </div>
+                </div>
+                <input type="range" id="listPriceSlider" min="10" max="850" step="1" value="90" oninput="syncModalPriceFromSlider()">
+              </div>
+
+              <div class="price-input-card">
+                <div class="pic-header">
+                  <label for="listDiscountInput">Discount Offered (%)</label>
+                  <div class="price-val-tag">
+                    <input type="number" id="listDiscountInput" value="15" min="0" max="60" oninput="syncModalDiscountFromInput()">
+                    <span>%</span>
+                  </div>
+                </div>
+                <input type="range" id="listDiscountSlider" min="0" max="60" step="1" value="15" oninput="syncModalDiscountFromSlider()">
+              </div>
+            </div>
+
+            <button type="button" class="btn-check-decision" onclick="runModalBehaviorCheck()">
+              <i class="fa-solid fa-magnifying-glass-chart"></i> Check Customer Buying Decision
+            </button>
+
+            <!-- Real-Time Customer Buying Verdict Display -->
+            <div class="customer-verdict-card" id="modalVerdictCard">
+              <div class="verdict-banner-head">
+                <div class="verdict-icon-bubble" id="modalVerdictIcon">
+                  <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div class="verdict-text-group">
+                  <span class="verdict-caption">Customer Decision:</span>
+                  <h5 id="modalVerdictTitle">WILL BUY — High Customer Purchase Intent</h5>
+                </div>
+              </div>
+
+              <div class="verdict-probability-stats">
+                <div class="prob-stat-card">
+                  <span class="ps-label">Purchase Probability</span>
+                  <span class="ps-number" id="modalProbVal">94.8%</span>
+                </div>
+                <div class="prob-stat-card">
+                  <span class="ps-label">AI Sweet-Spot Price</span>
+                  <span class="ps-number highlight-sweet" id="modalSweetSpot">$79.99</span>
+                </div>
+              </div>
+
+              <!-- Animated Gradient Progress Bar -->
+              <div class="progress-track">
+                <div class="progress-fill" id="modalProgressFill" style="width: 94.8%;"></div>
+              </div>
+
+              <!-- Explanation Message -->
+              <p class="verdict-explanation" id="modalVerdictMessage">
+                Customers perceive high value at $89.99 (with 15% discount) for a 4.8★ rated product. Expected conversion rate: 94.8%.
+              </p>
+
+              <!-- One-Click Adopt Sweet-Spot Button -->
+              <button type="button" class="btn-adopt-sweet-spot" onclick="adoptModalSweetSpot()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Adopt Recommended Sweet-Spot Price (<span id="adoptBtnPrice">$79.99</span>)
+              </button>
+            </div>
+
+            <!-- Demographic Reactions Breakdown -->
+            <div class="demographics-card">
+              <h6><i class="fa-solid fa-users"></i> How Demographic Segments Respond to this Price:</h6>
+              <div class="demo-list" id="modalDemoList">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Price Sensitivity Drop-Off Curve -->
+            <div class="elasticity-card">
+              <div class="e-card-header">
+                <h6><i class="fa-solid fa-chart-simple"></i> Price Elasticity & Customer Drop-Off:</h6>
+                <span>Higher Price = Lower Intent</span>
+              </div>
+              <div class="elasticity-bars" id="modalElasticityBars">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Modal Footer Action Buttons -->
+      <div class="listing-modal-footer">
+        <button type="button" class="btn-modal-cancel" onclick="closeListingModal()">Cancel</button>
+        <button type="button" class="btn-modal-publish" onclick="submitProductListing()">
+          <i class="fa-solid fa-bag-shopping"></i> List Product in Store with Validated Price
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SHOPPING BAG DRAWER ==================== -->
+  <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCartDrawer()" style="display: none;"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3><i class="fa-solid fa-bag-shopping"></i> Shopping Bag (<span id="cartCountTitle">0</span>)</h3>
+      <button class="btn-close-cart" onclick="toggleCartDrawer()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="cart-items-list" id="cartItemsList">
+      <!-- Injected via JavaScript -->
+    </div>
+
+    <div class="cart-footer">
+      <div class="subtotal-row">
+        <span>Order Subtotal:</span>
+        <span class="subtotal-amount" id="cartSubtotalAmount">$0.00</span>
+      </div>
+      <div class="free-shipping-note">
+        <i class="fa-solid fa-circle-check"></i> Eligible for Free Standard Delivery
+      </div>
+      <button class="btn-checkout-primary" onclick="proceedToCheckout()">
+        Proceed to Secure Checkout
+      </button>
+      <button class="btn-continue-browse" onclick="toggleCartDrawer()">Continue Shopping</button>
+    </div>
+  </aside>
+
+  <!-- ==================== CHECKOUT SUCCESS MODAL ==================== -->
+  <div class="modal-backdrop" id="checkoutSuccessModal" style="display: none;">
+    <div class="checkout-success-dialog">
+      <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+      <h3>Order Placed Successfully!</h3>
+      <p class="order-number">Order Ref: #NS-9284710-OK</p>
+      <p class="order-subtext">Thank you for shopping at NovaStore. The seller has been notified to fulfill your order.</p>
+
+      <div class="checkout-breakdown" id="checkoutBreakdownBox">
+        <!-- Injected via JS -->
+      </div>
+
+      <button class="btn-return-store" onclick="closeCheckoutSuccessModal()">Back to Storefront</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification Stack -->
+  <div class="toast-stack" id="toastStack"></div>
+
+  <!-- Application Logic -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
