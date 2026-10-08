@@ -1,0 +1,107 @@
+{
+  "source_notebook": "Untitled1 (1).ipynb",
+  "dataset": "ecommerce_dynamic_pricing_dataset.csv",
+  "algorithm": "Support Vector Classifier (SVC) with GridSearchCV",
+  "best_params": {
+    "C": 100,
+    "gamma": 0.1,
+    "kernel": "rbf"
+  },
+  "best_cv_score": 0.9869,
+  "test_accuracy": 0.992,
+  "feature_names": [
+    "Price",
+    "Discount",
+    "Customer_Age",
+    "Review_Rating"
+  ],
+  "scaled_features": [
+    "Price",
+    "Discount",
+    "Customer_Age"
+  ],
+  "top_grid_results": [
+    {
+      "rank": 1,
+      "C": 100.0,
+      "gamma": 0.1,
+      "kernel": "rbf",
+      "mean_cv_score": 0.9869
+    },
+    {
+      "rank": 2,
+      "C": 10.0,
+      "gamma": 0.1,
+      "kernel": "rbf",
+      "mean_cv_score": 0.9869
+    },
+    {
+      "rank": 3,
+      "C": 10.0,
+      "gamma": 0.01,
+      "kernel": "linear",
+      "mean_cv_score": 0.9859
+    },
+    {
+      "rank": 3,
+      "C": 100.0,
+      "gamma": 0.001,
+      "kernel": "linear",
+      "mean_cv_score": 0.9859
+    },
+    {
+      "rank": 3,
+      "C": 10.0,
+      "gamma": 0.001,
+      "kernel": "linear",
+      "mean_cv_score": 0.9859
+    },
+    {
+      "rank": 3,
+      "C": 10.0,
+      "gamma": 0.1,
+      "kernel": "linear",
+      "mean_cv_score": 0.9859
+    }
+  ],
+  "category_stats": {
+    "Books": {
+      "min_price": 14.86,
+      "max_price": 998.64,
+      "avg_price": 489.02,
+      "median_price": 492.12,
+      "avg_discount": 78.3
+    },
+    "Clothing": {
+      "min_price": 11.2,
+      "max_price": 994.62,
+      "avg_price": 511.05,
+      "median_price": 479.19,
+      "avg_discount": 72.07
+    },
+    "Electronics": {
+      "min_price": 13.3,
+      "max_price": 997.63,
+      "avg_price": 503.61,
+      "median_price": 491.97,
+      "avg_discount": 78.78
+    },
+    "Home & Kitchen": {
+      "min_price": 10.86,
+      "max_price": 998.47,
+      "avg_price": 507.46,
+      "median_price": 501.64,
+      "avg_discount": 77.79
+    }
+  },
+  "scaler_means": {
+    "Price": 501.3886,
+    "Discount": 75.1368,
+    "Customer_Age": 44.4048
+  },
+  "scaler_scales": {
+    "Price": 284.2724,
+    "Discount": 67.3504,
+    "Customer_Age": 15.1186
+  }
+}
